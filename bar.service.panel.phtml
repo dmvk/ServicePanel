@@ -11,11 +11,13 @@
 		<tr>
 			<th>Service name</th>
 			<th>Intance of ...</th>
+			<?php if ($showFile): ?><th>File</th><?php endif; ?>
 		</tr>
 		<?php foreach ($services as $service): ?>
 		<tr>
 			<td><?php echo htmlspecialchars($service['name']) ?></td>
 			<td><?php echo htmlspecialchars($service['class']) ?></td>
+			<?php if (isset ($service['file'])): ?><td><?php echo Nette\Diagnostics\Helpers::editorLink($service['file'], 1) ?></td><?php endif; ?>
 		</tr>
 		<?php endforeach ?>
 	</table>
