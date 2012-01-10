@@ -3,7 +3,7 @@
 		line-height: 2em;
 	}
 	
-	#servicePanel span {
+	#servicePanel .nette-ServicesPanel-namespace {
 		display: block;
 		text-align: center;
 		font-size: 30px;
@@ -23,7 +23,7 @@
 		<?php if ($namespace != NULL): ?>
 		<tr>
 			<td colspan="2">
-				<span><?php echo htmlspecialchars($namespace) ?></span>
+				<span class="nette-ServicesPanel-namespace"><?php echo htmlspecialchars($namespace) ?></span>
 				<p>Accessible via: $container-><?php echo htmlspecialchars($namespace) ?>->service</p>
 			</td>
 		</tr>
@@ -34,7 +34,7 @@
 		</tr>
 		<?php foreach ($services as $service): ?>
 		<tr>
-			<td><?php echo htmlspecialchars($service['name']) ?></td>
+			<td><?php if (isset($service['meta'])): ?><a href='#' class='nette-toggler' rel='#nette-ServicesPanel-row-<?php echo htmlspecialchars($service['name']) ?>'>&nbsp;&#x25ba;</a><?php endif; ?>&nbsp;<?php echo htmlspecialchars($service['name']) ?></td>
 			<td>
 				<?php
 					if (isset($service['file'])) {
@@ -45,6 +45,20 @@
 				?>
 			</td>
 		</tr>
+		<?php if (isset($service['meta'])): ?>
+		<tr id="nette-ServicesPanel-row-<?php echo htmlspecialchars($service['name']) ?>" class='nette-collapsed'>
+			<td colspan="2">
+				<table>
+					<?php if (isset($service['meta']['tags']['run'])): echo '<tr><th>Run:</th><td>' . ($service['meta']['tags']['run'] ? 'yes' : 'no') . '</td></tr>'; unset ($service['meta']['tags']['run']); endif; ?>
+					<?php if (isset($service['meta']['tags']) && count($service['meta']['tags'])): ?>
+						<?php foreach ($service['meta']['tags'] as $key => $tag): ?>
+							<tr><th><?php echo htmlspecialchars($key) ?></th><td><?php echo Nette\Diagnostics\Helpers::clickableDump($tag) ?></td></tr>
+						<?php endforeach ?>
+					<?php endif; ?>
+				</table>
+			</td>
+		</tr>
+		<?php endif; ?>
 		<?php endforeach ?>
 	<?php endforeach ?>
 	</table>
