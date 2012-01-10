@@ -67,6 +67,9 @@ class ServicePanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 			if (isset($this->classes[$class])) {
 				$item['file'] = $this->classes[$class];
 			}
+			if (isset($this->container->meta[$name])) {
+				$item['meta'] = $this->container->meta[$name];
+			}
 
 			$list[$namespace][] = $item;
 		}
