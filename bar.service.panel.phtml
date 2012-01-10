@@ -3,7 +3,11 @@
 		line-height: 2em;
 	}
 	
-	#servicePanel .nette-ServicesPanel-namespace {
+	#servicePanel table {
+		width: 100%;
+	}
+	
+	#servicePanel .nette-ServicePanel-namespace {
 		display: block;
 		text-align: center;
 		font-size: 30px;
@@ -23,7 +27,7 @@
 		<?php if ($namespace != NULL): ?>
 		<tr>
 			<td colspan="2">
-				<span class="nette-ServicesPanel-namespace"><?php echo htmlspecialchars($namespace) ?></span>
+				<span class="nette-ServicePanel-namespace"><?php echo htmlspecialchars($namespace) ?></span>
 				<p>Accessible via: $container-><?php echo htmlspecialchars($namespace) ?>->service</p>
 			</td>
 		</tr>
@@ -34,7 +38,7 @@
 		</tr>
 		<?php foreach ($services as $service): ?>
 		<tr>
-			<td><?php if (isset($service['meta'])): ?><a href='#' class='nette-toggler' rel='#nette-ServicesPanel-row-<?php echo htmlspecialchars($service['name']) ?>'>&nbsp;&#x25ba;</a><?php endif; ?>&nbsp;<?php echo htmlspecialchars($service['name']) ?></td>
+			<td><?php if (isset($service['meta']) || (isset($service['interfaces']))): ?><a href='#' class='nette-toggler' rel='#nette-ServicePanel-row-<?php echo htmlspecialchars($service['name']) ?>'>&nbsp;&#x25ba;</a><?php endif; ?>&nbsp;<?php echo htmlspecialchars($service['name']) ?></td>
 			<td>
 				<?php
 					if (isset($service['file'])) {
@@ -45,17 +49,32 @@
 				?>
 			</td>
 		</tr>
-		<?php if (isset($service['meta'])): ?>
-		<tr id="nette-ServicesPanel-row-<?php echo htmlspecialchars($service['name']) ?>" class='nette-collapsed'>
+		<?php if (isset($service['meta']) || (isset($service['interfaces']))): ?>
+		<tr id="nette-ServicePanel-row-<?php echo htmlspecialchars($service['name']) ?>" class='nette-collapsed'>
 			<td colspan="2">
+				<?php if (isset($service['meta'])): ?>
+				Tags:
 				<table>
 					<?php if (isset($service['meta']['tags']['run'])): echo '<tr><th>Run:</th><td>' . ($service['meta']['tags']['run'] ? 'yes' : 'no') . '</td></tr>'; unset ($service['meta']['tags']['run']); endif; ?>
 					<?php if (isset($service['meta']['tags']) && count($service['meta']['tags'])): ?>
-						<?php foreach ($service['meta']['tags'] as $key => $tag): ?>
-							<tr><th><?php echo htmlspecialchars($key) ?></th><td><?php echo Nette\Diagnostics\Helpers::clickableDump($tag) ?></td></tr>
+						<?php foreach ($service['meta']['tags'] as $tag => $attrs): ?>
+							<tr><th><?php echo htmlspecialchars($tag) ?></th><td><?php echo Nette\Diagnostics\Helpers::clickableDump($attrs) ?></td></tr>
 						<?php endforeach ?>
-					<?php endif; ?>
+					<?php endif ?>
 				</table>
+				<?php endif ?>
+				<?php if (isset($service['interfaces'])): ?>
+				Implements following interfaces:
+				<table>
+					<?php foreach ($service['interfaces'] as $interface): ?>
+					<tr>
+						<th>
+							<?php echo htmlspecialchars($interface) ?>
+						</th>
+					</tr>
+					<?php endforeach ?>
+				</table>
+				<?php endif ?>
 			</td>
 		</tr>
 		<?php endif; ?>

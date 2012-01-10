@@ -70,7 +70,12 @@ class ServicePanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 			if (isset($this->container->meta[$name])) {
 				$item['meta'] = $this->container->meta[$name];
 			}
-
+			
+			$interfaces = Nette\Reflection\ClassType::from($class)->getInterfaceNames();
+			if (count($interfaces) > 0) {
+				$item['interfaces'] = $interfaces;
+			}
+			
 			$list[$namespace][] = $item;
 		}
 
