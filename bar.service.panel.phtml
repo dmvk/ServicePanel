@@ -1,25 +1,51 @@
+<style type="text/css">
+	#servicePanel td {
+		line-height: 2em;
+	}
+	
+	#servicePanel span {
+		display: block;
+		text-align: center;
+		font-size: 30px;
+		margin: 10px 0px 0px 0px;
+	}
+	
+	#servicePanel p {
+		text-align: center;
+	}
+</style>
+
 <h1>Available services</h1>
 
-<div class="nette-inner">
-	<?php foreach ($list as $namespace => $services): ?>
-	
-	<?php if ($namespace != NULL): ?>
-	<h2 style="font-size: 2em"><?php echo htmlspecialchars($namespace) ?></h2>
-	<?php endif ?>
-	
+<div id="servicePanel" class="nette-inner">
 	<table>
+	<?php foreach ($list as $namespace => $services): ?>
+		<?php if ($namespace != NULL): ?>
 		<tr>
-			<th>Service name</th>
-			<th>Intance of ...</th>
-			<?php if ($showFile): ?><th>File</th><?php endif; ?>
+			<td colspan="2">
+				<span><?php echo htmlspecialchars($namespace) ?></span>
+				<p>Accessible via: $container-><?php echo htmlspecialchars($namespace) ?>->service</p>
+			</td>
+		</tr>
+		<?php endif ?>
+		<tr>
+			<th>Service</th>
+			<th>Return</th>
 		</tr>
 		<?php foreach ($services as $service): ?>
 		<tr>
 			<td><?php echo htmlspecialchars($service['name']) ?></td>
-			<td><?php echo htmlspecialchars($service['class']) ?></td>
-			<?php if (isset ($service['file'])): ?><td><?php echo Nette\Diagnostics\Helpers::editorLink($service['file'], 1) ?></td><?php endif; ?>
+			<td>
+				<?php
+					if (isset($service['file'])) {
+						echo Nette\Diagnostics\Helpers::editorLink($service['file'], 1)->setText($service['class']);
+					} else {
+						echo htmlspecialchars($service['class']);
+					}
+				?>
+			</td>
 		</tr>
 		<?php endforeach ?>
-	</table>
 	<?php endforeach ?>
+	</table>
 </div>

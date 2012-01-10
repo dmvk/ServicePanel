@@ -1,10 +1,11 @@
 <?php
+
 /**
-* Service panel for Nette 2.0. Shows list of all available services.
-*
-* @author David Morávek
-* @license MIT
-*/
+ * Service panel for Nette 2.0. Shows list of all available services.
+ *
+ * @author David Morávek
+ * @license MIT
+ */
 
 namespace Panel;
 
@@ -55,20 +56,18 @@ class ServicePanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 				continue;
 
 			$namespace = NULL;
-
-			if (Nette\Utils\Strings::contains($name, '_'))
+			if (Nette\Utils\Strings::contains($name, '_')) {
 				list($namespace) = explode('_', $name);
-
-			if (!isset($list[$namespace]))
+			}
+			if (!isset($list[$namespace])) {
 				$list[$namespace] = array();
+			}
 
-			$item = array(
-				'name' => $name,
-				'class' => $class
-			);
+			$item = array('name' => $name, 'class' => $class);
 			if (isset($this->classes[$class])) {
 				$item['file'] = $this->classes[$class];
 			}
+
 			$list[$namespace][] = $item;
 		}
 
@@ -82,7 +81,6 @@ class ServicePanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 	{
 		ob_start();
 		$list = $this->getList();
-		$showFile = isset($this->classes);
 		require_once __DIR__ . "/bar.service.panel.phtml";
 		return ob_get_clean();
 	}
