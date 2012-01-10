@@ -16,12 +16,19 @@ class ServicePanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 	/** @var Nette\DI\Container */
 	private $container;
 
+	/** @var array|NULL */
+	private $classes;
+
 	/**
 	 * @param Nette\DI\Container
+	 * @param Nette\Loaders\RobotLoader|NULL
 	 */
-	public function __construct(Nette\DI\Container $container)
+	public function __construct(Nette\DI\Container $container, Nette\Loaders\RobotLoader $loader = NULL)
 	{
 		$this->container = $container;
+		if (isset($loader)) {
+			$this->classes = $loader->getIndexedClasses();
+		}
 	}
 
 	/**
@@ -55,10 +62,14 @@ class ServicePanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 			if (!isset($list[$namespace]))
 				$list[$namespace] = array();
 
-			$list[$namespace][] = array(
+			$item = array(
 				'name' => $name,
 				'class' => $class
 			);
+			if (isset($this->classes[$class])) {
+				$item['file'] = $this->classes[$class];
+			}
+			$list[$namespace][] = $item;
 		}
 
 		return $list;
@@ -71,16 +82,18 @@ class ServicePanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 	{
 		ob_start();
 		$list = $this->getList();
+		$showFile = isset($this->classes);
 		require_once __DIR__ . "/bar.service.panel.phtml";
 		return ob_get_clean();
 	}
 
 	/**
-	 * @param Nette\DI\Container $container 
+	 * @param Nette\DI\Container $container
+	 * @param Nette\Loaders\RobotLoader|NULL
 	 */
-	public static function register(Nette\DI\Container $container)
+	public static function register(Nette\DI\Container $container, Nette\Loaders\RobotLoader $loader = NULL)
 	{
-		Nette\Diagnostics\Debugger::$bar->addPanel(new static($container));
+		Nette\Diagnostics\Debugger::$bar->addPanel(new static($container, $loader));
 	}
 
 }
