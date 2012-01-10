@@ -4,6 +4,7 @@
  * Service panel for Nette 2.0. Shows list of all available services.
  *
  * @author David Morávek
+ * @author Vojtěch Dobeš
  * @license MIT
  */
 

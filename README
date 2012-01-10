@@ -3,4 +3,4 @@ Panel for Nette 2.0 which shows list of all available services
 usage:
 
 in bootstrap:
-Panel\ServicePanel::register($container)
+Panel\ServicePanel::register($container, $robotLoader)
