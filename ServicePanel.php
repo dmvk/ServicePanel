@@ -18,8 +18,8 @@ class ServicePanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 	/** @var Nette\DI\Container */
 	private $container;
 
-	/** @var array|NULL */
-	private $classes;
+	/** @var Nette\Loaders\RobotLoader|NULL */
+	private $loader;
 
 	/**
 	 * @param Nette\DI\Container
@@ -28,9 +28,7 @@ class ServicePanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 	public function __construct(Nette\DI\Container $container, Nette\Loaders\RobotLoader $loader = NULL)
 	{
 		$this->container = $container;
-		if (isset($loader)) {
-			$this->classes = $loader->getIndexedClasses();
-		}
+		$this->loader = $loader;
 	}
 
 	/**
@@ -47,6 +45,7 @@ class ServicePanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 	private function getList()
 	{
 		$annotations = $this->container->getReflection()->getAnnotations();
+		$files = isset($this->loader) ? $this->loader->getIndexedClasses() : NULL;
 
 		$list = array();
 
@@ -65,8 +64,8 @@ class ServicePanel extends Nette\Object implements Nette\Diagnostics\IBarPanel
 			}
 
 			$item = array('name' => $name, 'class' => $class);
-			if (isset($this->classes[$class])) {
-				$item['file'] = $this->classes[$class];
+			if (isset($files[$class])) {
+				$item['file'] = $files[$class];
 			}
 			if (isset($this->container->meta[$name])) {
 				$item['meta'] = $this->container->meta[$name];
